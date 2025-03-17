@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface CaseStudyCardProps {
   title: string;
@@ -23,8 +23,8 @@ interface CaseStudyCardProps {
 }
 
 const CaseStudyCard: React.FC<CaseStudyCardProps & { 
-  index: number; 
-  isAnimating: boolean;
+  index: number;
+  isVisible: boolean;
 }> = ({
   title,
   project,
@@ -33,20 +33,19 @@ const CaseStudyCard: React.FC<CaseStudyCardProps & {
   stats,
   imageSrc,
   index,
-  isAnimating
+  isVisible
 }) => {
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 1000 }}
-      animate={isAnimating ? { 
+      initial={{ opacity: 0, y: 100 }}
+      animate={isVisible ? { 
         opacity: 1,
         y: 0,
         transition: { 
-          duration: 1,
-          delay: index * 0.3,
+          duration: 1.5,
           ease: [0.16, 1, 0.3, 1]
         }
-      } : {}}
+      } : { opacity: 0, y: 100 }}
       style={{
         position: 'absolute',
         top: index * 15,
@@ -57,7 +56,7 @@ const CaseStudyCard: React.FC<CaseStudyCardProps & {
       className="w-full rounded-2xl overflow-hidden bg-white transform-gpu"
     >
       <div className="flex flex-row">
-        <div className="relative w-1/2 h-[500px]">
+        <div className="relative w-1/3 h-[450px]">
           <Image
             src={imageSrc}
             alt={title}
@@ -66,21 +65,12 @@ const CaseStudyCard: React.FC<CaseStudyCardProps & {
             quality={100}
           />
         </div>
-        <div className="w-1/2 p-12 flex flex-col gap-[40px] relative">
-          <Link
-            href="#"
-            className="flex items-center justify-center w-[150px] h-[150px] rounded-full bg-black text-white hover:bg-white hover:text-black transition-all group absolute top-1/2 -translate-y-1/2 right-8 mt-[25px]"
-          >
-            <div className="flex flex-col items-center text-center">
-              <span className="text-s font-medium">View</span>
-              <span className="text-s font-medium">Case Study</span>
-            </div>
-          </Link>
-          <div className="flex flex-col gap-6">
+        <div className="w-2/3 p-12 flex flex-col justify-between relative">
+          <div className="flex flex-col space-y-6">
             <h3 className="text-[38px] leading-[42px] font-medium text-black">
               {title}
             </h3>
-            <div className="flex items-center gap-3 text-lg">
+            <div className="flex items-center gap-3 text-base">
               <span className="text-black">{project}</span>
               <span className="text-[#8A8A8A]">|</span>
               <span className="text-black">{industry}</span>
@@ -88,39 +78,58 @@ const CaseStudyCard: React.FC<CaseStudyCardProps & {
               <span className="text-black">{platform}</span>
             </div>
           </div>
-          <div className="flex gap-[22px]">
-            <div className="w-[176px] flex flex-col gap-[26px]">
-              <div className="flex items-end gap-[3px]">
-                <span className="text-[38px] leading-[42px] text-[#19BC37]">
+          <div className="flex space-x-20 mt-16">
+            <div className="flex flex-col space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-[38px] leading-[38px] font-medium text-[#19BC37]">
                   {stats.stat1.value}
                 </span>
                 <Image
-                  src="/icons/arrow_warm_up.svg"
+                  src="/icons/arrow_up.svg"
                   alt="Increase"
-                  width={24}
-                  height={24}
-                  className="mb-2"
+                  width={20}
+                  height={20}
+                  className="mt-1"
                 />
               </div>
-              <p className="text-lg text-black">{stats.stat1.description}</p>
+              <p className="text-base text-black">
+                {stats.stat1.description}
+              </p>
             </div>
-            <div className="w-[1px] h-full bg-[#E3E3E3]" />
-            <div className="w-[193px] flex flex-col gap-[26px]">
-              <div className="flex items-end gap-[3px]">
-                <span className="text-[38px] leading-[42px] text-[#19BC37]">
+            <div className="flex flex-col space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-[38px] leading-[38px] font-medium text-[#19BC37]">
                   {stats.stat2.value}
                 </span>
                 <Image
                   src="/icons/shopping_cart.svg"
                   alt="Cart"
-                  width={24}
-                  height={24}
-                  className="mb-2"
+                  width={20}
+                  height={20}
+                  className="mt-1"
                 />
               </div>
-              <p className="text-lg text-black">{stats.stat2.description}</p>
+              <p className="text-base text-black">
+                {stats.stat2.description}
+              </p>
             </div>
           </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isVisible ? { 
+              opacity: 1,
+              transition: { duration: 1, delay: 0.5 }
+            } : { opacity: 0 }}
+            className="absolute right-[100px] bottom-[150px] translate-x-1/2 transform"
+          >
+            <Link
+              href="#"
+              className="flex flex-col items-center justify-center w-[120px] h-[120px] rounded-full bg-black text-white text-center hover:bg-black/90 transition-colors"
+            >
+              <span className="text-sm font-medium">View</span>
+              <span className="text-sm font-medium">Case Study</span>
+            </Link>
+          </motion.div>
         </div>
       </div>
     </motion.div>
@@ -128,7 +137,11 @@ const CaseStudyCard: React.FC<CaseStudyCardProps & {
 };
 
 const CaseStudies = () => {
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [visibleCardIndex, setVisibleCardIndex] = useState(-1);
+  const sectionRef = useRef<HTMLElement>(null);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+  
   const caseStudies = [
     {
       title: "Transforming E-commerce for a Global Retail Giant",
@@ -217,16 +230,86 @@ const CaseStudies = () => {
     }
   ];
 
-  const handleScreenClick = () => {
-    if (!isAnimating) {
-      setIsAnimating(true);
+  // Handle initial click/touch to reveal first card
+  const handleInteraction = () => {
+    if (!hasInteracted) {
+      setHasInteracted(true);
+      setVisibleCardIndex(0);
     }
   };
 
+  // Handle wheel events to reveal next cards without scrolling the page
+  useEffect(() => {
+    if (!hasInteracted || !sectionRef.current) return;
+    
+    const section = sectionRef.current;
+    
+    const handleWheel = (e: WheelEvent) => {
+      // Only handle scrolling down (positive deltaY)
+      if (e.deltaY > 0 && visibleCardIndex < caseStudies.length - 1) {
+        e.preventDefault();
+        
+        // Debounce the scroll event
+        if (scrollTimeout.current) {
+          clearTimeout(scrollTimeout.current);
+        }
+        
+        scrollTimeout.current = setTimeout(() => {
+          setVisibleCardIndex(prev => Math.min(prev + 1, caseStudies.length - 1));
+        }, 300); // Adjust timeout as needed for responsiveness
+      }
+    };
+    
+    // For mobile touch events
+    let touchStartY = 0;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!hasInteracted || visibleCardIndex >= caseStudies.length - 1) return;
+      
+      const touchY = e.touches[0].clientY;
+      const diff = touchStartY - touchY;
+      
+      // If scrolling down and still have cards to reveal
+      if (diff > 50) { // Threshold for swipe detection
+        e.preventDefault();
+        
+        if (scrollTimeout.current) {
+          clearTimeout(scrollTimeout.current);
+        }
+        
+        scrollTimeout.current = setTimeout(() => {
+          setVisibleCardIndex(prev => Math.min(prev + 1, caseStudies.length - 1));
+          touchStartY = touchY; // Reset for continuous scrolling
+        }, 300);
+      }
+    };
+    
+    // Add event listeners
+    section.addEventListener('wheel', handleWheel, { passive: false });
+    section.addEventListener('touchstart', handleTouchStart, { passive: true });
+    section.addEventListener('touchmove', handleTouchMove, { passive: false });
+    
+    return () => {
+      // Clean up event listeners
+      section.removeEventListener('wheel', handleWheel);
+      section.removeEventListener('touchstart', handleTouchStart);
+      section.removeEventListener('touchmove', handleTouchMove);
+      
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
+  }, [hasInteracted, visibleCardIndex, caseStudies.length]);
+
   return (
     <section 
-      className="w-full bg-[#1F1F1F] py-24 cursor-pointer" 
-      onClick={handleScreenClick}
+      ref={sectionRef}
+      className="w-full bg-[#1F1F1F] py-24 cursor-pointer min-h-screen flex flex-col justify-center" 
+      onClick={handleInteraction}
     >
       <div className="max-w-[1440px] mx-auto px-6 md:px-8 lg:px-12">
         <div className="text-center mb-16">
@@ -249,27 +332,36 @@ const CaseStudies = () => {
             <h2 className="font-superior font-medium text-6xl text-white">
              Driving growth through Innovation
             </h2>
-           
           </motion.div>
+          
+          {!hasInteracted && (
+            <motion.p 
+              className="text-white mt-8 opacity-70"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
+              
+            </motion.p>
+          )}
         </div>
+        
         <div className="relative" style={{ height: '600px' }}>
           {caseStudies.map((study, index) => (
             <CaseStudyCard 
               key={index} 
               {...study} 
               index={index}
-              isAnimating={isAnimating}
+              isVisible={index <= visibleCardIndex}
             />
           ))}
         </div>
+        
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ 
-            opacity: isAnimating ? 1 : 0,
-            transition: { 
-              duration: 1,
-              delay: (caseStudies.length - 1) * 0.3 + 1 + 0.3
-            }
+            opacity: visibleCardIndex === caseStudies.length - 1 ? 1 : 0,
+            transition: { duration: 1, delay: 0.5 }
           }}
           className="flex justify-center"
         >

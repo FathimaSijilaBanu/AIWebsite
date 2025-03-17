@@ -5,11 +5,31 @@ import { motion } from 'framer-motion';
 
 const IntroSection = () => {
   const partners = [
-    { name: 'Adobe Commerce', image: '/images/partners/adobe-commerce.png' },
-    { name: 'Shopify', image: '/images/partners/shopify.png' },
-    { name: 'Magento Solution Partner', image: '/images/partners/magento-solution-partner.png' },
-    { name: 'Akinon', image: '/images/partners/akinon.png' },
-    { name: 'Pimcore', image: '/images/partners/pimcore.png' },
+    { 
+      name: 'Adobe', 
+      image: '/images/partners/Adobe-Commerce.svg',
+      label: 'Bronze Solution Partner'
+    },
+    { 
+      name: 'Shopify Plus', 
+      image: '/images/partners/shopify.png',
+      label: ''
+    },
+    { 
+      name: 'Magento', 
+      image: '/images/partners/magento-solution-partner.png',
+      label: 'Solution Partner'
+    },
+    { 
+      name: 'Akinon', 
+      image: '/images/partners/akinon.png',
+      label: 'Solution Partner'
+    },
+    { 
+      name: 'Pimcore', 
+      image: '/images/partners/pimcore.png',
+      label: 'Silver Solution Partner'
+    },
   ];
 
   const text = "Codilar empowers brands with seamless ecommerce solutions across platforms like";
@@ -102,39 +122,34 @@ const IntroSection = () => {
           </motion.div>
 
           {/* Partner Logos */}
-          <motion.div 
-            className="flex items-center justify-between"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={{
-              visible: {
-                transition: {
-                  staggerChildren: 0.2
-                }
-              }
-            }}
-          >
-            {partners.map((partner, index) => (
-              <motion.div 
-                key={partner.name} 
-                className="flex items-center"
-                variants={child}
-              >
-                <div className="relative h-12 w-32">
-                  <Image
-                    src={partner.image}
-                    alt={partner.name}
-                    fill
-                    className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-500"
-                  />
+          <div className="flex justify-center">
+            <div className="flex items-center">
+              {partners.map((partner, index) => (
+                <div key={partner.name} className="flex items-center">
+                  <div className="flex flex-col items-center">
+                    <div className="h-10">
+                      <Image
+                        src={partner.image}
+                        alt={partner.name}
+                        width={125}
+                        height={40}
+                        className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300"
+                        style={{ maxHeight: '100%', width: '215.8px' }}
+                      />
+                    </div>
+                    {partner.label && (
+                      <span className="text-[10px] text-white/60 mt-1 text-center whitespace-nowrap">
+                        {partner.label}
+                      </span>
+                    )}
+                  </div>
+                  {index < partners.length - 1 && (
+                    <div className="w-px h-12 bg-white/20 mx-8" />
+                  )}
                 </div>
-                {index < partners.length - 1 && (
-                  <div className="w-px h-12 bg-[#EBEBEB] mx-6" />
-                )}
-              </motion.div>
-            ))}
-          </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

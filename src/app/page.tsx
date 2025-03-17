@@ -1,3 +1,4 @@
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -23,13 +24,9 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative h-64 md:h-96">
-              <Image
-                src="/hero-image.jpg"
-                alt="Business professionals in a meeting"
-                fill
-                className="object-cover rounded-lg"
-                priority
-              />
+              <div className="w-full h-full bg-blue-700 rounded-lg flex items-center justify-center">
+                <p className="text-white text-xl">Company Image</p>
+              </div>
             </div>
           </div>
         </div>

@@ -1,290 +1,202 @@
-'use client';
-
+'use client'
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
-
-interface ExpertiseCardProps {
-  title: string;
-  icon: React.ReactNode;
-}
-
-const ExpertiseCard: React.FC<ExpertiseCardProps> = ({ title, icon }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -20 }}
-    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-    className="flex items-center gap-2 px-5 py-2 border border-[#B7B7B7] rounded-lg hover:border-black transition-colors"
-  >
-    <div className="w-8 h-8 flex items-center justify-center">
-      {icon}
-    </div>
-    <span className="font-superior font-medium text-lg leading-[1.21]">{title}</span>
-  </motion.div>
-);
 
 const ExpertiseSection = () => {
-  const [currentSection, setCurrentSection] = useState(2);
-  const [direction, setDirection] = useState(0);
+  // State to track which expertise section is active
+  const [activeExpertise, setActiveExpertise] = useState(2); // Default to Digital Commerce (02)
+  // State to control animation
+  const [animationDirection, setAnimationDirection] = useState('none'); // 'up', 'down', or 'none'
+  // Ref for the content container
+  const contentRef = useRef(null);
 
-  const handleScreenClick = () => {
-    if (currentSection < 4) {
-      setDirection(1);
-      setCurrentSection(currentSection + 1);
-    }
+  // Function to handle expertise change with scroll animation
+  const handleExpertiseChange = () => {
+    // Start scrolling up animation
+    setAnimationDirection('up');
+    
+    // After animation midpoint, change the expertise
+    setTimeout(() => {
+      const currentIndex = expertiseData.findIndex(exp => exp.id === activeExpertise);
+      const nextIndex = (currentIndex + 1) % expertiseData.length;
+      const nextId = expertiseData[nextIndex].id;
+      console.log('Going to next expertise:', nextId);
+      setActiveExpertise(nextId);
+      
+      // Change animation to scrolling down
+      setAnimationDirection('down');
+      
+      // Reset animation after completion
+      setTimeout(() => {
+        setAnimationDirection('none');
+      }, 500);
+    }, 500); // Half the animation duration
   };
 
-  const digitalCommerceItems = [
-    { title: 'Headless Commerce', icon: '🔌' },
-    { title: 'Composable Commerce', icon: '🧩' },
-    { title: 'B2C & Omnichannel', icon: '🛍️' },
-    { title: 'D2C', icon: '📦' },
-    { title: 'B2B Commerce', icon: '🤝' },
-    { title: 'Mobile Commerce', icon: '📱' },
-    { title: 'Order Management System (OMS)', icon: '📋' }
-  ];
-
-  const serviceItems = [
-    { title: 'Strategy Consulting', icon: '🎯' },
-    { title: 'Experience Design', icon: '🎨' },
-    { title: 'Platform Engineering', icon: '⚙️' },
-    { title: 'Conversion Rate Optimization', icon: '📈' },
-    { title: 'DevOps', icon: '🔄' },
-    { title: 'Managed Support', icon: '🛠️' },
-    { title: 'Digital Marketing', icon: '📢' }
-  ];
-
-  const contentDataItems = [
-    { title: 'Digital Experience (DXP)', icon: '🌐' },
-    { title: 'Product Information Management (PIM)', icon: '📊' },
-    { title: 'Analytics', icon: '📉' },
-    { title: 'Customer Data Platform (CDP)', icon: '👥' }
-  ];
-
-  const sectionVariants = {
-    enter: (direction: number) => ({
-      y: direction > 0 ? 1000 : -1000,
-      opacity: 0
-    }),
-    center: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 1.2,
-        ease: [0.16, 1, 0.3, 1]
-      }
+  // Data for expertise sections
+  const expertiseData = [
+    {
+      id: 2,
+      title: "2. Digital Commerce",
+      description: "Transform your business with innovative digital commerce solutions tailored for every industry and business model. From B2C to mobile commerce, Codilar delivers scalable, customer-focused platforms.",
+      cards: [
+        { title: "Composable Commerce", icon: "/icons/expertise-1.svg" },
+        { title: "B2C & Omnichannel", icon: "/icons/expertise-2.svg" },
+        { title: "Mobile Commerce", icon: "/icons/expertise-3.svg" },
+        { title: "Order Management System (OMS)", icon: "/icons/expertise-4.svg" },
+        { title: "D2C", icon: "/icons/expertise-5.svg" },
+        { title: "B2B Commerce", icon: "/icons/expertise-6.svg" },
+        { title: "Headless Commerce", icon: "/icons/expertise-7.svg" }
+      ]
     },
-    exit: (direction: number) => ({
-      y: direction < 0 ? 1000 : -1000,
-      opacity: 0,
-      transition: {
-        duration: 1.2,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    })
-  };
-
-  const cardVariants = {
-    enter: { opacity: 0, y: 50 },
-    center: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.8,
-        delay: 0.5,
-        ease: [0.16, 1, 0.3, 1]
-      }
+    {
+      id: 3,
+      title: "3. Service",
+      description: "End-to-End Services to Achieve Your Business Goals. From strategic planning to operational execution, Codilar offers a full suite of services to optimize and grow your digital commerce capabilities.",
+      cards: [
+        { title: "Strategy Consulting", icon: "/icons/expertise-1.svg" },
+        { title: "Experience Design", icon: "/icons/expertise-2.svg" },
+        { title: "Platform Engineering", icon: "/icons/expertise-3.svg" },
+        { title: "Conversion Rate Optimization", icon: "/icons/expertise-4.svg" },
+        { title: "Managed Support", icon: "/icons/expertise-5.svg" },
+        { title: "DevOps", icon: "/icons/expertise-6.svg" },
+        { title: "Digital Marketing", icon: "/icons/expertise-7.svg" }
+      ]
     },
-    exit: { 
-      opacity: 0, 
-      y: -50,
-      transition: {
-        duration: 0.8,
-        ease: [0.16, 1, 0.3, 1]
-      }
+    {
+      id: 4,
+      title: "4. Content & Data",
+      description: "Empower your business with streamlined content management and actionable insights. Codilar helps unify your data, optimize experiences, and enhance decision-making.",
+      cards: [
+        { title: "Digital Experience (DXP)", icon: "/icons/expertise-1.svg" },
+        { title: "Product Information Management (PIM)", icon: "/icons/expertise-2.svg" },
+        { title: "Analytics", icon: "/icons/expertise-3.svg" },
+        { title: "Customer Data Platform (CDP)", icon: "/icons/expertise-4.svg" }
+      ]
     }
-  };
+  ];
 
-  const renderSection = (sectionNumber: number) => {
-    switch(sectionNumber) {
-      case 2:
-        return (
-          <motion.div 
-            key="section2"
-            custom={direction}
-            variants={sectionVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className="space-y-7"
-          >
-            <div className="space-y-7">
-              <motion.span 
-                variants={cardVariants}
-                className="text-base font-superior font-light uppercase text-black"
-              >
-                Our Expertises : 02
-              </motion.span>
-              <div className="space-y-7">
-                <motion.h2 
-                  variants={cardVariants}
-                  className="text-5xl font-superior font-medium leading-[1.16]"
-                >
-                  2. Digital Commerce
-                </motion.h2>
-                <motion.div variants={cardVariants}>
-                  <Link
-                    href="/expertise/digital-commerce"
-                    className="inline-flex items-center gap-1.5 px-6 py-4 border border-black rounded-[26px] text-base font-superior font-medium hover:bg-black hover:text-white transition-colors"
-                  >
-                    Explore All
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 15L15 5M15 5H7.5M15 5V12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </Link>
-                </motion.div>
-                <motion.p 
-                  variants={cardVariants}
-                  className="text-lg font-superior leading-[1.44] tracking-[0.01em] max-w-[657px]"
-                >
-                  Transform your business with innovative digital commerce solutions tailored for every industry and business model. From B2C to mobile commerce, Codilar delivers scalable, customer-focused platforms.
-                </motion.p>
-              </div>
-            </div>
-            <motion.div 
-              variants={cardVariants}
-              className="flex flex-wrap gap-4"
-            >
-              {digitalCommerceItems.map((item) => (
-                <ExpertiseCard key={item.title} {...item} />
-              ))}
-            </motion.div>
-          </motion.div>
-        );
-      case 3:
-        return (
-          <motion.div 
-            key="section3"
-            custom={direction}
-            variants={sectionVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className="space-y-7"
-          >
-            <div className="space-y-7">
-              <motion.span 
-                variants={cardVariants}
-                className="text-base font-superior font-light uppercase"
-              >
-                Our Expertises : 03
-              </motion.span>
-              <div className="space-y-7">
-                <motion.h2 
-                  variants={cardVariants}
-                  className="text-5xl font-superior font-medium leading-[1.16]"
-                >
-                  3. Service
-                </motion.h2>
-                <motion.div variants={cardVariants}>
-                  <Link
-                    href="/expertise/services"
-                    className="inline-flex items-center gap-1.5 px-6 py-4 border border-black rounded-[26px] text-base font-superior font-medium hover:bg-black hover:text-white transition-colors"
-                  >
-                    Explore All
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 15L15 5M15 5H7.5M15 5V12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </Link>
-                </motion.div>
-                <motion.p 
-                  variants={cardVariants}
-                  className="text-lg font-superior leading-[1.44] tracking-[0.01em] max-w-[657px]"
-                >
-                  End-to-End Services to Achieve Your Business Goals. From strategic planning to operational execution, Codilar offers a full suite of services to optimize and grow your digital commerce capabilities.
-                </motion.p>
-              </div>
-            </div>
-            <motion.div 
-              variants={cardVariants}
-              className="flex flex-wrap gap-4"
-            >
-              {serviceItems.map((item) => (
-                <ExpertiseCard key={item.title} {...item} />
-              ))}
-            </motion.div>
-          </motion.div>
-        );
-      case 4:
-        return (
-          <motion.div 
-            key="section4"
-            custom={direction}
-            variants={sectionVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className="space-y-7"
-          >
-            <div className="space-y-7">
-              <motion.span 
-                variants={cardVariants}
-                className="text-base font-superior font-light uppercase"
-              >
-                Our Expertises : 04
-              </motion.span>
-              <div className="space-y-7">
-                <motion.h2 
-                  variants={cardVariants}
-                  className="text-5xl font-superior font-medium leading-[1.16]"
-                >
-                  4. Content & Data
-                </motion.h2>
-                <motion.div variants={cardVariants}>
-                  <Link
-                    href="/expertise/content-data"
-                    className="inline-flex items-center gap-1.5 px-6 py-4 border border-black rounded-[26px] text-base font-superior font-medium hover:bg-black hover:text-white transition-colors"
-                  >
-                    Explore All
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 15L15 5M15 5H7.5M15 5V12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </Link>
-                </motion.div>
-                <motion.p 
-                  variants={cardVariants}
-                  className="text-lg font-superior leading-[1.44] tracking-[0.01em] max-w-[657px]"
-                >
-                  Empower your business with streamlined content management and actionable insights. Codilar helps unify your data, optimize experiences, and enhance decision-making.
-                </motion.p>
-              </div>
-            </div>
-            <motion.div 
-              variants={cardVariants}
-              className="flex flex-wrap gap-4"
-            >
-              {contentDataItems.map((item) => (
-                <ExpertiseCard key={item.title} {...item} />
-              ))}
-            </motion.div>
-          </motion.div>
-        );
-      default:
-        return null;
-    }
-  };
+  // Get current active expertise data
+  const currentExpertise = expertiseData.find(item => item.id === activeExpertise) || expertiseData[0];
 
   return (
-    <section 
-      className="bg-white py-20 overflow-hidden cursor-pointer" 
-      onClick={handleScreenClick}
-    >
-      <div className="max-w-7xl mx-auto px-6">
-        <AnimatePresence mode="wait" custom={direction}>
-          {renderSection(currentSection)}
-        </AnimatePresence>
+    <section className="w-full bg-white py-16 relative overflow-hidden">
+      {/* Background design elements */}
+      {/* <div className="absolute top-0 left-0 w-full h-full opacity-25 pointer-events-none">
+        <div className="absolute top-10 left-10 w-64 h-64 rounded-full bg-blue-400 blur-3xl opacity-25"></div>
+        <div className="absolute bottom-10 right-10 w-64 h-64 rounded-full bg-red-500 blur-3xl opacity-25"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-purple-400 blur-3xl opacity-25"></div>
+        <div className="absolute bottom-20 left-20 w-48 h-48 rounded-full bg-pink-500 blur-3xl opacity-25"></div>
+      </div> */}
+
+      {/* Main content container with backdrop blur effect */}
+      <div className="max-w-full mx-auto px-32 relative  bg-white/5 h-[600px] ">
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* Left section with animated content */}
+          <div className="lg:w-1/2 relative h-[700px] overflow-hidden">
+            {/* Content with scroll animation */}
+            <div 
+              ref={contentRef}
+              className={`space-y-7 h-full transition-transform duration-1000 ease-in-out
+                ${animationDirection === 'up' ? 'animate-scroll-up' : ''}
+                ${animationDirection === 'down' ? 'animate-scroll-down' : ''}
+              `}
+            >
+              <div className="space-y-7">
+                <p className="uppercase text-sm font-light tracking-wider text-black/80">
+                  Our Expertises : {currentExpertise.id.toString().padStart(2, '0')}
+                </p>
+                
+                <div className="space-y-9">
+                  <div className="space-y-7">
+                    <h2 className="text-5xl font-medium leading-tight">{currentExpertise.title}</h2>
+                    
+                    <div className="inline-flex items-center border border-black rounded-full px-6 py-4 hover:bg-black hover:text-white transition-colors duration-300">
+                      <Link href="/explore" className="text-base font-medium flex items-center gap-1.5">
+                        Explore All
+                        <span className="ml-1.5">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                          </svg>
+                        </span>
+                      </Link>
+                    </div>
+                  </div>
+                  
+                  <p className="text-lg leading-relaxed tracking-wide text-black/80">
+                    {currentExpertise.description}
+                  </p>
+                </div>
+              </div>
+              
+              {/* Cards grid */}
+              <div className="flex flex-wrap gap-4">
+                {currentExpertise.cards.map((card, index) => (
+                  <div 
+                    key={index}
+                    className="flex items-center gap-2 border border-gray-300 rounded-lg py-2 px-5 hover:border-gray-500 transition-all hover:shadow-sm group cursor-pointer w-fit"
+                  >
+                    <div className="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-md">
+                      {/* Replace placeholder with actual icon from the path */}
+                      <div className="w-6 h-6 relative flex items-center justify-center">
+                        <img 
+                          src={card.icon} 
+                          alt={`${card.title} icon`}
+                          className="w-full h-full object-contain group-hover:filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-base font-medium line-clamp-2">{card.title}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right section - blank and clickable */}
+          <div className="lg:w-1/2">
+            <div className="w-full h-full">
+              <div 
+                className="w-full h-[600px] border-none bg-gray-200 shadow-sm relative cursor-pointer"
+                onClick={handleExpertiseChange}
+                aria-label="Click to change expertise"
+              >
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Add the animation styles */}
+      <style jsx>{`
+        @keyframes scrollUp {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-100%);
+          }
+        }
+        
+        @keyframes scrollDown {
+          0% {
+            transform: translateY(100%);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-scroll-up {
+          animation: scrollUp 0.5s ease-in-out forwards;
+        }
+        
+        .animate-scroll-down {
+          animation: scrollDown 0.5s ease-in-out forwards;
+        }
+      `}</style>
     </section>
   );
 };

@@ -1,257 +1,275 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
-const CompanyEvents = () => {
-  const [currentSlide, setCurrentSlide] = useState(1);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const events = [
-    {
-      id: 1,
-      title: 'Driving innovation through thought Leadership',
-      description: "Codilar hosts and participates in global e-commerce events to share insights, explore trends, and drive innovation. From expert panel discussions to hands-on workshops, we're at the forefront of industry thought leadership.",
-      image: '/images/events/event1.jpg',
-      upcomingEvent: {
-        title: "Let's Connect at Expand North Star 2024",
-        tag: "Upcoming Event"
+// Event type definition
+type EventType = {
+  id: number;
+  title: string;
+  description: string;
+  color: string; // Using color instead of image
+};
+
+// Sample event data
+const events: EventType[] = [
+  {
+    id: 1,
+    title: 'Driving innovation through thought Leadership',
+    description: "Codilar hosts and participates in global e-commerce events to share insights, explore trends, and drive innovation. From expert panel discussions to hands-on workshops, we're at the forefront of industry thought leadership.",
+    color: '#3B82F6', // Blue
+  },
+  {
+    id: 2,
+    title: 'Building the future of e-commerce',
+    description: "Join us at industry-leading conferences where we showcase the latest in e-commerce technology and solutions.",
+    color: '#10B981', // Green
+  },
+  {
+    id: 3,
+    title: 'Connecting businesses with innovative solutions',
+    description: "Our events bring together experts and businesses to explore cutting-edge solutions for modern commerce challenges.",
+    color: '#F59E0B', // Amber
+  },
+  {
+    id: 4,
+    title: 'Shaping the digital commerce landscape',
+    description: "Through our events and workshops, we're helping shape the future of how businesses connect with customers online.",
+    color: '#EF4444', // Red
+  },
+];
+const eventsImages = [
+  '/images/case-study-1.jpg',
+  '/images/case-study-2.jpg',
+  '/images/case-study-3.jpg',
+  '/images/case-study-4.jpg',
+  '/images/case-study-5.jpg',
+];
+
+// Upcoming event data
+const upcomingEvent = {
+  title: "Let's Connect at Expand North Star 2024",
+  image: '/images/case-study-5.jpg',
+};
+
+const Events = () => {
+  // Add state for current event index
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  
+  // Refs for infinite scrolling
+  const containerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | null>(null);
+  const positionRef = useRef(0);
+  
+  // State for animation control
+  const [isPaused, setIsPaused] = useState(false);
+  const [activeColorIndex, setActiveColorIndex] = useState(0);
+  
+  // Duplicate images for infinite scrolling - add more copies to ensure continuous scrolling
+  const allImages = [...eventsImages, ...eventsImages, ...eventsImages, ...eventsImages, ...eventsImages];
+
+  // Animation function that moves the images continuously
+  const animate = () => {
+    if (innerRef.current && containerRef.current && !isPaused) {
+      // Total width of the container
+      const containerWidth = containerRef.current.clientWidth;
+      
+      // Single image width (all images have the same width) + margin
+      const margin = 40; // 40px margin between images
+      const imageWidth = containerWidth + margin;
+      
+      // Increment position for leftward movement
+      positionRef.current -= 1.5; // Speed: 1.5px per frame
+      
+      // Calculate current image index - loop through original images length
+      const currentPosition = Math.abs(positionRef.current);
+      const currentIndex = Math.floor(currentPosition / imageWidth) % eventsImages.length;
+      
+      // Update active color when index changes
+      if (currentIndex !== activeColorIndex) {
+        setActiveColorIndex(currentIndex);
       }
-    },
-    {
-      id: 2,
-      title: 'Celebrating teamwork and community spirit',
-      description: 'At Codilar, we believe in fostering a strong community. From team-building activities to CSR initiatives, our social events showcase our commitment to collaboration, inclusivity, and giving back.',
-      image: '/images/events/event2.jpg',
-      upcomingEvent: {
-        title: "Let's Connect at Expand North Star 2024",
-        tag: "Upcoming Event"
-      }
+      
+      // Apply the transform - continuous movement without resetting
+      innerRef.current.style.transform = `translateX(${positionRef.current}px)`;
     }
-  ];
-
-  const totalSlides = events.length;
-  const currentEvent = events[currentSlide - 1];
-
-  const handleNextSlide = () => {
-    setCurrentSlide(prev => (prev === totalSlides ? 1 : prev + 1));
+    
+    // Continue animation loop
+    animationRef.current = requestAnimationFrame(animate);
   };
 
-  const handlePrevSlide = () => {
-    setCurrentSlide(prev => (prev === 1 ? totalSlides : prev - 1));
-  };
-
-  // Auto-play effect
+  // Start animation on mount
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
-    if (isPlaying) {
-      intervalId = setInterval(() => {
-        handleNextSlide();
-      }, 3000); // Change slide every 3 seconds
-    }
-
+    animationRef.current = requestAnimationFrame(animate);
+    
+    // Cleanup function to cancel animation
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isPlaying]);
+  }, [isPaused]);
 
-  // Update progress when slide changes or during autoplay
-  useEffect(() => {
-    if (isPlaying) {
-      const startTime = Date.now();
-      const interval = 3000; // 3 seconds per slide
-      
-      const progressInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        const newProgress = (elapsed / interval) * 100;
-        
-        if (newProgress >= 100) {
-          setProgress(0);
-        } else {
-          setProgress(newProgress);
-        }
-      }, 16); // Update roughly every frame
+  // Calculate progress based on current position
+  const calculateProgress = () => {
+    if (!containerRef.current) return 0;
+    
+    const containerWidth = containerRef.current.clientWidth;
+    const totalWidth = containerWidth * eventsImages.length;
+    const position = Math.abs(positionRef.current);
+    
+    // Calculate progress as a percentage (0 to 100)
+    return ((position % totalWidth) / totalWidth) * 100;
+  };
 
-      return () => clearInterval(progressInterval);
-    } else {
-      setProgress(0);
-    }
-  }, [isPlaying, currentSlide]);
+  // Add handlers for next and previous
+  const handlePrevious = () => {
+    setCurrentEventIndex((prev) => (prev === 0 ? events.length - 1 : prev - 1));
+  };
 
-  if (!currentEvent) return null;
+  const handleNext = () => {
+    setCurrentEventIndex((prev) => (prev === events.length - 1 ? 0 : prev + 1));
+  };
+
+  // Get current event instead of fixed event
+  const currentEvent = events[currentEventIndex];
 
   return (
-    <section className="relative w-full overflow-hidden py-20">
-      {/* Background Elements */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-pink-50 via-white to-pink-50/30" />
-        <div className="absolute top-0 left-0 w-full h-full opacity-25">
-          {/* Polygon shapes can be added here */}
-        </div>
-      </div>
-
-      {/* Content Container */}
-      <div className="relative z-10 max-w-[1400px] mx-auto px-4">
-        <div className="grid grid-cols-12 gap-8">
-          {/* Left Content */}
-          <div className="col-span-5">
-            {/* Header */}
-            <div className="mb-12">
-              <h3 className="text-sm uppercase font-light tracking-wider mb-4">
-                Company Events
-              </h3>
-              <h2 className="text-[56px] font-medium leading-[1.2] mb-6">
-                {currentEvent.title}
-              </h2>
-              <p className="text-lg leading-relaxed opacity-90">
-                {currentEvent.description}
-              </p>
-            </div>
-
-            {/* Explore Events Button */}
-            <button className="group inline-flex items-center gap-2 px-6 py-3 border border-black/10 rounded-full text-base hover:border-black transition-colors">
-              <span>Explore All Events</span>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="transform group-hover:translate-x-1 transition-transform"
-              >
-                <path
-                  d="M5.83325 14.1667L14.1666 5.83334M14.1666 5.83334H5.83325M14.1666 5.83334V14.1667"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+    <section className="relative bg-gradient-to-br from-pink-50 to-white overflow-hidden py-16">
+      <div className="container mx-auto px-4">
+        {/* Top Navigation */}
+        <div className="flex items-center justify-between mb-10">
+          <h3 className="text-sm font-medium text-[#6B7280]">COMPANY EVENTS</h3>
+          
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={handlePrevious}
+              className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center hover:border-black/30 transition-colors"
+              aria-label="Previous"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <span className="text-base">{currentEventIndex + 1} of {events.length}</span>
+            <button 
+              onClick={handleNext}
+              className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center hover:border-black/30 transition-colors"
+              aria-label="Next"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
           </div>
+        </div>
 
-          {/* Right Content - Images and Navigation */}
-          <div className="col-span-7 relative">
-            {/* Images Container */}
-            <div className="relative">
-              <div className="relative aspect-[16/9] w-full">
+        {/* Main Title */}
+        <div className="flex flex-col lg:flex-row gap-12">
+          <div className="lg:w-4/12">
+            <h2 className="text-[56px] font-medium leading-tight mb-8">
+              {currentEvent.title}
+            </h2>
+
+            {/* Explore Button */}
+            <button className="inline-flex items-center gap-2 px-6 py-3 border border-black/20 rounded-full hover:bg-black hover:text-white transition-colors mb-10">
+              <span>Explore All Events</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M7 17L17 7M17 7H7M17 7V17" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+
+            {/* Upcoming Event Card */}
+            <div className="bg-[#FFF3F3] rounded-2xl p-6 mb-8">
+              <span className="text-[#335081] text-sm font-medium">Upcoming Event</span>
+              <h3 className="text-xl font-medium mt-2 mb-4">{upcomingEvent.title}</h3>
+              <div className="relative h-32 rounded-lg overflow-hidden">
                 <Image
-                  src={currentEvent.image}
-                  alt={currentEvent.title}
+                  src={upcomingEvent.image}
+                  alt={upcomingEvent.title}
                   fill
-                  className="object-cover rounded-2xl"
-                  priority
+                  className="object-cover"
                 />
-                {/* Gradient Overlay */}
-                <div className="absolute right-0 top-0 h-full w-1/4 bg-gradient-to-l from-white to-transparent" />
-              </div>
-
-              {/* Upcoming Event Card */}
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#FFF3F3] border border-[#FFD7D7] backdrop-blur-xl p-6 rounded-xl max-w-sm">
-                <span className="text-[#335081] text-lg font-light mb-2 block">
-                  {currentEvent.upcomingEvent.tag}
-                </span>
-                <h4 className="text-lg font-medium leading-snug">
-                  {currentEvent.upcomingEvent.title}
-                </h4>
-              </div>
-
-              {/* View Events Button */}
-              <button className="absolute right-8 bottom-8 flex items-center justify-center w-[120px] h-[120px] bg-black text-white rounded-full hover:scale-105 transition-transform">
-                <span className="text-base font-medium">View Events</span>
-              </button>
-
-              {/* Progress Line and Play/Pause Button */}
-              <div className="absolute bottom-0 left-0 right-0 flex items-center">
-                <div className="flex-grow h-[2px] bg-gray-200 relative">
-                  <div
-                    className="h-full bg-red-600 transition-all duration-300 ease-linear"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-                <button
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="ml-4 w-8 h-8 rounded-full border border-black flex items-center justify-center hover:opacity-75 transition-opacity"
-                  aria-label={isPlaying ? 'Pause slideshow' : 'Play slideshow'}
-                >
-                  {isPlaying ? (
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect x="6" y="4" width="4" height="16" rx="1" fill="black" />
-                      <rect x="14" y="4" width="4" height="16" rx="1" fill="black" />
-                    </svg>
-                  ) : (
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M6.92773 4.40741C6.92773 3.77541 7.64573 3.40341 8.14973 3.75941L18.6467 11.3524C19.1147 11.6824 19.1147 12.3764 18.6467 12.7064L8.14973 20.2994C7.64573 20.6554 6.92773 20.2834 6.92773 19.6514V4.40741Z"
-                        fill="black"
-                      />
-                    </svg>
-                  )}
-                </button>
               </div>
             </div>
 
-            {/* Navigation */}
-            <div className="flex items-center gap-7 mt-8">
-              <button
-                onClick={handlePrevSlide}
-                className="w-10 h-10 rounded-full border border-black flex items-center justify-center opacity-25 hover:opacity-100 transition-opacity"
+            <p className="text-base text-black/70">
+              {currentEvent.description}
+            </p>
+          </div>
+          
+          {/* Right Column - Image Slider */}
+          <div className="lg:w-8/12 relative">
+            <div 
+              ref={containerRef}
+              className="relative h-[600px] rounded-2xl overflow-hidden"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              {/* Image container with infinite scroll effect */}
+              <div 
+                ref={innerRef}
+                className="absolute inset-0 flex"
+                style={{
+                  willChange: 'transform',
+                  transition: isPaused ? 'none' : 'transform 0.1s linear'
+                }}
               >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="rotate-180"
-                >
-                  <path
-                    d="M9 18L15 12L9 6"
-                    stroke="black"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
+                {/* Map through all event images (duplicated) */}
+                {allImages.map((image, index) => (
+                  <div
+                    key={`image-${index}`}
+                    className="flex-shrink-0 w-full h-full"
+                    style={{ 
+                      marginRight: '40px',
+                      width: containerRef.current ? containerRef.current.clientWidth : '100%'
+                    }}
+                  >
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={image}
+                        alt={`Event slide ${index % eventsImages.length + 1}`}
+                        fill
+                        className="object-cover rounded-lg"
+                        priority={index === 0}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-              <span className="text-lg font-light">
-                {currentSlide} of {totalSlides}
-              </span>
+              {/* Colored overlay based on current event */}
+              <div 
+                className="absolute inset-0 mix-blend-color opacity-40 transition-colors duration-500"
+                style={{ backgroundColor: events[activeColorIndex % events.length].color }}
+              />
+            </div>
+
+            {/* Progress Bar and Controls */}
+            <div className="mt-6 flex items-center justify-between">
+              <div className="flex-grow h-1 bg-gray-200 rounded-full overflow-hidden mr-4">
+                <div 
+                  className="h-full bg-[#FF0000] transition-all duration-300"
+                  style={{ width: `${calculateProgress()}%` }}
+                ></div>
+              </div>
 
               <button
-                onClick={handleNextSlide}
-                className="w-10 h-10 rounded-full border border-black flex items-center justify-center hover:opacity-75 transition-opacity"
+                onClick={() => setIsPaused(!isPaused)}
+                className="w-12 h-12 rounded-full border border-black/20 flex items-center justify-center"
+                aria-label={isPaused ? "Play" : "Pause"}
               >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M9 18L15 12L9 6"
-                    stroke="black"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                {isPaused ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 4L19 12L5 20V4Z" fill="currentColor" />
+                  </svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" />
+                    <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
+                  </svg>
+                )}
               </button>
             </div>
           </div>
@@ -261,4 +279,4 @@ const CompanyEvents = () => {
   );
 };
 
-export default CompanyEvents; 
+export default Events;
