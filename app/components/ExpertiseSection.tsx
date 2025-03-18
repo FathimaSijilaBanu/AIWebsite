@@ -36,6 +36,20 @@ const ExpertiseSection = () => {
   // Data for expertise sections
   const expertiseData = [
     {
+      id: 1,
+      title: "1. Digital Commerce",
+      description: "Transform your business with innovative digital commerce solutions tailored for every industry and business model. From B2C to mobile commerce, Codilar delivers scalable, customer-focused platforms.",
+      cards: [
+        { title: "Composable Commerce", icon: "/icons/expertise-1.svg" },
+        { title: "B2C & Omnichannel", icon: "/icons/expertise-2.svg" },
+        { title: "Mobile Commerce", icon: "/icons/expertise-3.svg" },
+        { title: "Order Management System (OMS)", icon: "/icons/expertise-4.svg" },
+        { title: "D2C", icon: "/icons/expertise-5.svg" },
+        { title: "B2B Commerce", icon: "/icons/expertise-6.svg" },
+        { title: "Headless Commerce", icon: "/icons/expertise-7.svg" }
+      ]
+    },
+    {
       id: 2,
       title: "2. Digital Commerce",
       description: "Transform your business with innovative digital commerce solutions tailored for every industry and business model. From B2C to mobile commerce, Codilar delivers scalable, customer-focused platforms.",
