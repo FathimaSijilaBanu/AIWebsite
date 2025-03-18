@@ -8,12 +8,13 @@ const Hero = () => {
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0 z-10">
         <Image
-          src="/images/hero-background.jpg"
+          src="/hero.gif"
           alt="Hero Background"
           fill
           className="object-cover"
           priority
           sizes="100vw"
+          unoptimized={true}
         />
         <div className="absolute inset-0 bg-gradient-radial from-black/15 to-black/60" />
       </div>

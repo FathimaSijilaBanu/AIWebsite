@@ -51,12 +51,92 @@ const CaseStudyCard: React.FC<CaseStudyCardProps & {
         top: index * 15,
         left: 0,
         right: 0,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        maxWidth: '100%',
         zIndex: index
       }}
-      className="w-full rounded-2xl overflow-hidden bg-white transform-gpu"
+      className="w-[90%] sm:w-[95%] md:w-[1320px] rounded-2xl overflow-hidden bg-white transform-gpu mx-auto"
     >
       <div className="flex flex-col md:flex-row">
-        <div className="relative w-full md:w-1/3 h-[200px] sm:h-[250px] md:h-[450px]">
+        {/* Mobile layout - separate structure for mobile and desktop */}
+        <div className="md:hidden w-full px-6 pt-4 pb-6 flex flex-col">
+          {/* Project details at top for mobile */}
+          <div className="flex flex-wrap items-center gap-1 text-sm mb-3">
+            <span className="text-black">{project}</span>
+            <span className="text-[#8A8A8A]">|</span>
+            <span className="text-black">{industry}</span>
+            <span className="text-[#8A8A8A]">|</span>
+            <span className="text-black">{platform}</span>
+          </div>
+          
+          {/* Image */}
+          <div className="relative w-full h-[180px] rounded-xl overflow-hidden mb-4">
+            <Image
+              src={imageSrc}
+              alt={title}
+              fill
+              className="object-cover"
+              quality={100}
+            />
+          </div>
+          
+          {/* Stats */}
+          <div className="grid grid-cols-2 gap-x-4 mb-6">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1">
+                <span className="text-[28px] leading-tight font-medium text-[#19BC37]">
+                  {stats.stat1.value}
+                </span>
+                <Image
+                  src="/icons/arrow_up.svg"
+                  alt="Increase"
+                  width={16}
+                  height={16}
+                  className="w-4 h-4 mt-1"
+                />
+              </div>
+              <p className="text-sm text-black">
+                {stats.stat1.description}
+              </p>
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1">
+                <span className="text-[28px] leading-tight font-medium text-[#19BC37]">
+                  {stats.stat2.value}
+                </span>
+                <Image
+                  src="/icons/shopping_cart.svg"
+                  alt="Cart"
+                  width={16}
+                  height={16}
+                  className="w-4 h-4 mt-1"
+                />
+              </div>
+              <p className="text-sm text-black">
+                {stats.stat2.description}
+              </p>
+            </div>
+          </div>
+          
+          {/* View Case Study button */}
+          <Link
+            href="#"
+            className="flex items-center justify-center gap-2 w-full px-4 py-3 border border-black rounded-full text-black hover:bg-black hover:text-white transition-all group"
+          >
+            <span className="text-base font-medium">View Case Study</span>
+            <Image
+              src="/icons/arrow_outward.svg"
+              alt="Arrow"
+              width={20}
+              height={20}
+              className="group-hover:invert"
+            />
+          </Link>
+        </div>
+        
+        {/* Desktop layout - preserved from before */}
+        <div className="hidden md:block relative w-1/3 h-[450px]">
           <Image
             src={imageSrc}
             alt={title}
@@ -65,12 +145,12 @@ const CaseStudyCard: React.FC<CaseStudyCardProps & {
             quality={100}
           />
         </div>
-        <div className="w-full md:w-2/3 p-6 sm:p-8 md:p-12 flex flex-col justify-between relative">
-          <div className="flex flex-col space-y-4 md:space-y-6">
-            <h3 className="text-[24px] sm:text-[28px] md:text-[38px] leading-tight md:leading-[42px] font-medium text-black">
+        <div className="hidden md:flex w-2/3 p-12 flex-col justify-between relative">
+          <div className="flex flex-col space-y-6">
+            <h3 className="text-[38px] leading-[42px] font-medium text-black">
               {title}
             </h3>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm sm:text-base">
+            <div className="flex flex-wrap items-center gap-3 text-base">
               <span className="text-black">{project}</span>
               <span className="text-[#8A8A8A]">|</span>
               <span className="text-black">{industry}</span>
@@ -78,10 +158,10 @@ const CaseStudyCard: React.FC<CaseStudyCardProps & {
               <span className="text-black">{platform}</span>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row sm:space-x-8 md:space-x-20 mt-8 md:mt-16 space-y-6 sm:space-y-0">
-            <div className="flex flex-col space-y-2 md:space-y-4">
+          <div className="grid grid-cols-2 gap-20 mt-16">
+            <div className="flex flex-col space-y-4">
               <div className="flex items-center gap-2">
-                <span className="text-[28px] sm:text-[32px] md:text-[38px] leading-tight md:leading-[38px] font-medium text-[#19BC37]">
+                <span className="text-[38px] leading-tight font-medium text-[#19BC37]">
                   {stats.stat1.value}
                 </span>
                 <Image
@@ -89,16 +169,16 @@ const CaseStudyCard: React.FC<CaseStudyCardProps & {
                   alt="Increase"
                   width={20}
                   height={20}
-                  className="mt-1"
+                  className="w-5 h-5 mt-1"
                 />
               </div>
-              <p className="text-sm sm:text-base text-black">
+              <p className="text-base text-black">
                 {stats.stat1.description}
               </p>
             </div>
-            <div className="flex flex-col space-y-2 md:space-y-4">
+            <div className="flex flex-col space-y-4">
               <div className="flex items-center gap-2">
-                <span className="text-[28px] sm:text-[32px] md:text-[38px] leading-tight md:leading-[38px] font-medium text-[#19BC37]">
+                <span className="text-[38px] leading-tight font-medium text-[#19BC37]">
                   {stats.stat2.value}
                 </span>
                 <Image
@@ -106,30 +186,23 @@ const CaseStudyCard: React.FC<CaseStudyCardProps & {
                   alt="Cart"
                   width={20}
                   height={20}
-                  className="mt-1"
+                  className="w-5 h-5 mt-1"
                 />
               </div>
-              <p className="text-sm sm:text-base text-black">
+              <p className="text-base text-black">
                 {stats.stat2.description}
               </p>
             </div>
           </div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isVisible ? { 
-              opacity: 1,
-              transition: { duration: 1, delay: 0.5 }
-            } : { opacity: 0 }}
-            className="flex justify-center mt-8 md:mt-0 md:absolute md:right-[100px] md:bottom-[150px] md:translate-x-1/2 md:transform"
-          >
+          <div className="absolute right-[100px] bottom-[150px] translate-x-1/2 transform">
             <Link
               href="#"
-              className="flex flex-col items-center justify-center w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] rounded-full bg-black text-white text-center hover:bg-black/90 transition-colors"
+              className="flex flex-col items-center justify-center w-[120px] h-[120px] rounded-full bg-black text-white text-center hover:bg-black/90 transition-colors"
             >
-              <span className="text-xs sm:text-sm font-medium">View</span>
-              <span className="text-xs sm:text-sm font-medium">Case Study</span>
+              <span className="text-sm font-medium">View</span>
+              <span className="text-sm font-medium">Case Study</span>
             </Link>
-          </motion.div>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -260,7 +333,7 @@ const CaseStudies = () => {
       }
     };
     
-    // For mobile touch events
+    // Enhanced for mobile touch events
     let touchStartY = 0;
     
     const handleTouchStart = (e: TouchEvent) => {
@@ -273,8 +346,8 @@ const CaseStudies = () => {
       const touchY = e.touches[0].clientY;
       const diff = touchStartY - touchY;
       
-      // If scrolling down and still have cards to reveal
-      if (diff > 50) { // Threshold for swipe detection
+      // More sensitive for mobile (reduced threshold)
+      if (diff > 30) { // Lower threshold for mobile swipe detection
         e.preventDefault();
         
         if (scrollTimeout.current) {
@@ -308,13 +381,13 @@ const CaseStudies = () => {
   return (
     <section 
       ref={sectionRef}
-      className="w-full bg-[#1F1F1F] py-8 sm:py-16 md:py-24 cursor-pointer min-h-screen flex flex-col justify-center" 
+      className="w-full bg-[#1F1F1F] py-6 sm:py-12 md:py-24 cursor-pointer min-h-[100dvh] flex flex-col justify-center" 
       onClick={handleInteraction}
     >
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
-        <div className="text-center mb-8 sm:mb-12 md:mb-16">
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
+        <div className="text-center mb-6 sm:mb-8 md:mb-16">
           <motion.p 
-            className="font-superior text-sm sm:text-base font-light uppercase tracking-wider text-white mb-3 md:mb-4"
+            className="font-superior text-xs sm:text-sm md:text-base font-light uppercase tracking-wider text-white mb-2 md:mb-4"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -323,30 +396,30 @@ const CaseStudies = () => {
             CASE STUDIES
           </motion.p>
           <motion.div
-            className="flex items-center justify-center gap-4"
+            className="flex items-center justify-center gap-2 md:gap-4"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2 className="font-superior font-medium text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white">
+            <h2 className="font-superior font-medium text-2xl sm:text-3xl md:text-5xl lg:text-6xl text-white">
              Driving growth through Innovation
             </h2>
           </motion.div>
           
           {!hasInteracted && (
             <motion.p 
-              className="text-white mt-6 sm:mt-8 opacity-70 text-sm sm:text-base"
+              className="text-white mt-4 sm:mt-6 md:mt-8 opacity-70 text-xs sm:text-sm md:text-base"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
             >
-              
+              Tap to explore our case studies
             </motion.p>
           )}
         </div>
         
-        <div className="relative h-[500px] sm:h-[550px] md:h-[600px]">
+        <div className="relative h-[500px] md:h-[600px] w-full mb-8 md:mb-0">
           {caseStudies.map((study, index) => (
             <CaseStudyCard 
               key={index} 
@@ -357,25 +430,50 @@ const CaseStudies = () => {
           ))}
         </div>
         
+        {/* Mobile View All Case Studies button - always visible on mobile once interacted */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: hasInteracted ? 1 : 0,
+            transition: { duration: 1, delay: 0.5 }
+          }}
+          className="md:hidden flex justify-center mb-10"
+        >
+          <Link
+            href="#"
+            className="flex items-center justify-center gap-2 w-full px-4 ml-3 mr-3 py-3 border border-white rounded-full text-white hover:bg-white hover:text-black transition-all group"
+          >
+            <span className="text-base font-medium">View All Case Studies</span>
+            <Image
+              src="/icons/arrow_outward.svg"
+              alt="Arrow"
+              width={20}
+              height={20}
+              className="invert group-hover:invert-0"
+            />
+          </Link>
+        </motion.div>
+        
+        {/* Desktop Explore All Case Studies button - only after viewing all cards */}
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ 
             opacity: visibleCardIndex === caseStudies.length - 1 ? 1 : 0,
             transition: { duration: 1, delay: 0.5 }
           }}
-          className="flex justify-center mt-8 md:mt-0"
+          className="hidden md:flex justify-center mt-16"
         >
           <Link
             href="#"
-            className="flex items-center gap-[6px] px-4 sm:px-6 py-3 sm:py-4 border border-white rounded-[26px] text-white hover:bg-white hover:text-black transition-all group"
+            className="flex items-center gap-[6px] px-4 md:px-6 py-3 md:py-4 border border-white rounded-[26px] text-white hover:bg-white hover:text-black transition-all group"
           >
-            <span className="text-sm sm:text-base font-medium">Explore All Case Studies</span>
+            <span className="text-sm md:text-base font-medium">Explore All Case Studies</span>
             <Image
               src="/icons/arrow_outward.svg"
               alt="Arrow"
               width={16}
               height={16}
-              className="invert group-hover:invert-0 sm:w-[20px] sm:h-[20px]"
+              className="invert group-hover:invert-0 md:w-[20px] md:h-[20px]"
             />
           </Link>
         </motion.div>

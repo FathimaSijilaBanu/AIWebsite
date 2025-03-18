@@ -4,21 +4,55 @@ import Link from 'next/link';
 
 const ExpertiseSection = () => {
   // State to track which expertise section is active
-  const [activeExpertise, setActiveExpertise] = useState(2); // Default to Digital Commerce (02)
+  const [activeExpertise, setActiveExpertise] = useState(1); // Default to Platform (01)
   // State to control animation
   const [animationDirection, setAnimationDirection] = useState('none'); // 'up', 'down', or 'none'
   // Ref for the content container
-  const contentRef = useRef(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  // Ref for the section
+  const sectionRef = useRef<HTMLElement>(null);
+  // For debouncing scroll events
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+  // Track if scroll animation is in progress
+  const [isAnimating, setIsAnimating] = useState(false);
+  // Ref for the next section to scroll to
+  const nextSectionRef = useRef<HTMLElement | null>(null);
 
   // Function to handle expertise change with scroll animation
-  const handleExpertiseChange = () => {
+  const handleExpertiseChange = (direction = 'next') => {
+    if (isAnimating) return; // Prevent multiple animations at once
+    
+    const currentIndex = expertiseData.findIndex(exp => exp.id === activeExpertise);
+    
+    // Check if we're at the last expertise and trying to go to next
+    if (direction === 'next' && currentIndex === expertiseData.length - 1) {
+      // Scroll to the next section
+      if (nextSectionRef.current) {
+        nextSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      
+      // If no specific next section ref is set, scroll to the next sibling element
+      if (sectionRef.current && sectionRef.current.nextElementSibling) {
+        (sectionRef.current.nextElementSibling as HTMLElement).scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
+    
+    setIsAnimating(true);
     // Start scrolling up animation
     setAnimationDirection('up');
     
     // After animation midpoint, change the expertise
     setTimeout(() => {
-      const currentIndex = expertiseData.findIndex(exp => exp.id === activeExpertise);
-      const nextIndex = (currentIndex + 1) % expertiseData.length;
+      let nextIndex;
+      
+      if (direction === 'next') {
+        nextIndex = (currentIndex + 1) % expertiseData.length;
+      } else {
+        nextIndex = (currentIndex - 1 + expertiseData.length) % expertiseData.length;
+      }
+      
       const nextId = expertiseData[nextIndex].id;
       console.log('Going to next expertise:', nextId);
       setActiveExpertise(nextId);
@@ -29,16 +63,120 @@ const ExpertiseSection = () => {
       // Reset animation after completion
       setTimeout(() => {
         setAnimationDirection('none');
+        setIsAnimating(false);
       }, 500);
     }, 500); // Half the animation duration
   };
+
+  // Function to find and set the next section after this component
+  useEffect(() => {
+    if (sectionRef.current) {
+      // Find the next section after this one
+      let nextSection = sectionRef.current.nextElementSibling as HTMLElement | null;
+      
+      // If there's no direct sibling, try to find the next section in the DOM
+      if (!nextSection) {
+        const allSections = document.querySelectorAll('section');
+        let found = false;
+        
+        for (let i = 0; i < allSections.length; i++) {
+          if (found && allSections[i] !== sectionRef.current) {
+            nextSection = allSections[i] as HTMLElement;
+            break;
+          }
+          
+          if (allSections[i] === sectionRef.current) {
+            found = true;
+          }
+        }
+      }
+      
+      nextSectionRef.current = nextSection;
+    }
+  }, []);
+
+  // Handle wheel events to change expertise on scroll
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    
+    const section = sectionRef.current;
+    
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      
+      // Debounce the scroll event
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+      
+      scrollTimeout.current = setTimeout(() => {
+        if (e.deltaY > 0) {
+          // Scrolling down - go to next expertise
+          handleExpertiseChange('next');
+        } else if (e.deltaY < 0) {
+          // Scrolling up - go to previous expertise
+          handleExpertiseChange('prev');
+        }
+      }, 300);
+    };
+    
+    // For mobile touch events
+    let touchStartY = 0;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isAnimating) return;
+      
+      const touchY = e.touches[0].clientY;
+      const diff = touchStartY - touchY;
+      
+      // Threshold for swipe detection
+      if (Math.abs(diff) > 50) {
+        e.preventDefault();
+        
+        if (scrollTimeout.current) {
+          clearTimeout(scrollTimeout.current);
+        }
+        
+        scrollTimeout.current = setTimeout(() => {
+          if (diff > 0) {
+            // Swiping up - go to next expertise
+            handleExpertiseChange('next');
+          } else {
+            // Swiping down - go to previous expertise
+            handleExpertiseChange('prev');
+          }
+          touchStartY = touchY; // Reset for continuous scrolling
+        }, 300);
+      }
+    };
+    
+    // Add event listeners
+    section.addEventListener('wheel', handleWheel, { passive: false });
+    section.addEventListener('touchstart', handleTouchStart, { passive: true });
+    section.addEventListener('touchmove', handleTouchMove, { passive: false });
+    
+    return () => {
+      // Clean up event listeners
+      section.removeEventListener('wheel', handleWheel);
+      section.removeEventListener('touchstart', handleTouchStart);
+      section.removeEventListener('touchmove', handleTouchMove);
+      
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
+  }, [isAnimating]);
 
   // Data for expertise sections
   const expertiseData = [
     {
       id: 1,
-      title: "1. Digital Commerce",
-      description: "Transform your business with innovative digital commerce solutions tailored for every industry and business model. From B2C to mobile commerce, Codilar delivers scalable, customer-focused platforms.",
+      title: "1. Platform",
+      description: " Expertise in Leading Platforms for Seamless Digital Transformation. Our certified experts specialize in building, optimizing, and scaling your business using top platforms like Adobe Commerce, Shopify Plus, Pimcore, and more.",
       cards: [
         { title: "Composable Commerce", icon: "/icons/expertise-1.svg" },
         { title: "B2C & Omnichannel", icon: "/icons/expertise-2.svg" },
@@ -94,7 +232,10 @@ const ExpertiseSection = () => {
   const currentExpertise = expertiseData.find(item => item.id === activeExpertise) || expertiseData[0];
 
   return (
-    <section className="w-full bg-white py-8 md:py-16 relative overflow-hidden">
+    <section 
+      ref={sectionRef}
+      className="w-full bg-white py-8 md:py-16 relative overflow-hidden"
+    >
       {/* Background design elements - adjusted for mobile */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
         {/* Blue polygon - responsive sizing */}
@@ -188,16 +329,24 @@ const ExpertiseSection = () => {
             </div>
           </div>
 
-          {/* Right section - switcher */}
+          {/* Right section - information callout instead of the switcher */}
           <div className="w-1/2">
             <div className="w-full h-full">
               <div 
-                className="w-full h-[600px] border-none bg-gray-300 shadow-md rounded-xl relative cursor-pointer overflow-hidden"
-                onClick={handleExpertiseChange}
-                aria-label="Click to change expertise"
+                className="w-full h-[600px] border-none bg-gray-300 shadow-md rounded-xl relative overflow-hidden p-8 flex flex-col justify-center items-center"
               >
                 {/* Add subtle pattern to the gray area */}
                 <div className="absolute inset-0 opacity-5 bg-pattern"></div>
+                
+                <div className="text-center relative z-10">
+                  
+                  <div className="animate-bounce">
+                    {/* SVG for expertise illustration */}
+                   
+                   
+                  
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -82,19 +82,23 @@ const Awards = () => {
 
   return (
     <section className="relative bg-black py-12 overflow-hidden">
-      {/* Floating hover images container - show ONLY when first card is hovered */}
-      {hoveredCard === 0 && !isMobile && (
-        <div className="absolute inset-0 pointer-events-none z-20 overflow-visible">
+      {/* Floating hover images container - show for any hovered card */}
+      {hoveredCard !== null && !isMobile && (
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-visible">
           <motion.div
-            className="absolute top-[100px] left-[320px] w-[230px] h-[190px] shadow-xl"
+            className="absolute top-[50px] w-[230px] h-[190px] shadow-xl"
+            style={{
+              left: `${320 + (hoveredCard * 336)}px`, // Adjust position based on hovered card
+              zIndex: 2 // Higher z-index to ensure it overlaps
+            }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
           >
             <Image 
-              src={awards[0].hoverImages.image1}
-              alt="Award image 1"
+              src={awards[hoveredCard].hoverImages.image1}
+              alt={`Award image 1 for ${awards[hoveredCard].title}`}
               fill
               sizes="(max-width: 768px) 150px, 230px"
               className="object-cover rounded-lg"
@@ -105,15 +109,19 @@ const Awards = () => {
             />
           </motion.div>
           <motion.div
-            className="absolute top-[100px] left-[460px] w-[220px] h-[180px] shadow-xl"
+            className="absolute top-[80px] w-[220px] h-[180px] shadow-xl"
+            style={{
+              left: `${420 + (hoveredCard * 336)}px`, // Adjust position based on hovered card
+              zIndex: 1 // Lower z-index so it's underneath
+            }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             <Image 
-              src={awards[0].hoverImages.image2}
-              alt="Award image 2"
+              src={awards[hoveredCard].hoverImages.image2}
+              alt={`Award image 2 for ${awards[hoveredCard].title}`}
               fill
               sizes="(max-width: 768px) 150px, 220px"
               className="object-cover rounded-lg"
@@ -185,7 +193,7 @@ const Awards = () => {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, delay: 0.9 }}
-                className="md:hidden flex justify-center mt-4"
+                className="md:hidden absolute right-[25%] top-[-30%]"
               >
                 <Image
                   src="/images/awards/trophy.svg"
@@ -221,14 +229,15 @@ const Awards = () => {
                   hidden: { 
                     x: "50%",
                     y: 0,
-                    rotate: -25 + (index * 15),
-                    zIndex: index === 2 ? 4 : awards.length - index,
+                    rotate: -5 + (index * 15),
+                   
+                    zIndex:10,
                   },
                   visible: { 
                     x: `${index * 336}px`,
                     y: 0,
                     rotate: 0,
-                    zIndex: 1,
+                    zIndex: index === 2 ? 4 : awards.length - index,
                     transition: {
                       type: "spring",
                       stiffness: 100,
@@ -272,47 +281,60 @@ const Awards = () => {
 
         {/* Awards Grid for Mobile */}
         <div className="md:hidden">
-          <div className="grid gap-6">
-            {awards.map((award, index) => (
-              <motion.div
-                key={`mobile-${award.title}-${index}`}
-                className="rounded-[16px] overflow-hidden"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-              >
-                <div 
-                  className="p-6 flex flex-col"
-                  style={{
-                    background: `linear-gradient(135deg, ${award.gradient.from}, ${award.gradient.to})`,
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
-                  }}
+          <div className="overflow-x-auto pb-4 hide-scrollbar">
+            <div className="flex gap-4 w-max">
+              {awards.map((award, index) => (
+                <motion.div
+                  key={`mobile-${award.title}-${index}`}
+                  className="rounded-[16px] overflow-hidden min-w-[260px] max-w-[260px]"
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
                 >
-                  <div className="bg-white w-12 h-12 rounded-xl flex items-center justify-center p-3 relative z-10">
-                    <Image
-                      src={award.icon}
-                      alt={award.title}
-                      width={30}
-                      height={30}
-                      className="w-full h-full object-contain"
-                    />
+                  <div 
+                    className="p-6 flex flex-col h-[320px]"
+                    style={{
+                      background: `linear-gradient(135deg, ${award.gradient.from}, ${award.gradient.to})`,
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+                    }}
+                  >
+                    <div className="bg-white w-12 h-12 rounded-xl flex items-center justify-center p-3 relative z-10">
+                      <Image
+                        src={award.icon}
+                        alt={award.title}
+                        width={30}
+                        height={30}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    
+                    <h3 className="font-superior font-medium text-xl text-white mt-6 relative z-10">
+                      {award.title}
+                    </h3>
+                    <p className="font-superior font-light text-base text-white/80 mt-4 relative z-10">
+                      {award.year}
+                    </p>
                   </div>
-                  
-                  <h3 className="font-superior font-medium text-xl text-white mt-6 relative z-10">
-                    {award.title}
-                  </h3>
-                  <p className="font-superior font-light text-base text-white/80 mt-4 relative z-10">
-                    {award.year}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
 
+        {/* Add this CSS to your globals.css or a style tag for hiding scrollbar */}
+        <style jsx global>{`
+          .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+          .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
+
         {/* View All Button */}
-        <div className="flex justify-center mt-[500px] md:mt-[500px] mb-12">
+        <div className="flex justify-center mt-12 md:mt-[500px] mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
