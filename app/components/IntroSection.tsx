@@ -8,7 +8,7 @@ const IntroSection = () => {
     { 
       name: 'Adobe', 
       image: '/images/partners/Adobe-Commerce.svg',
-      label: 'Bronze Solution Partner'
+      label: ''
     },
     { 
       name: 'Shopify Plus', 
@@ -18,17 +18,17 @@ const IntroSection = () => {
     { 
       name: 'Magento', 
       image: '/images/partners/magento-solution-partner.png',
-      label: 'Solution Partner'
+      label: ''
     },
     { 
       name: 'Akinon', 
       image: '/images/partners/akinon.png',
-      label: 'Solution Partner'
+      label: ''
     },
     { 
       name: 'Pimcore', 
       image: '/images/partners/pimcore.png',
-      label: 'Silver Solution Partner'
+      label: ''
     },
   ];
 
@@ -74,18 +74,18 @@ const IntroSection = () => {
   };
 
   return (
-    <section className="bg-[#171515] py-20">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="space-y-16">
+    <section className="bg-[#171515] py-10 md:py-16 lg:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="space-y-8 md:space-y-12 lg:space-y-16">
           {/* Description Text */}
           <motion.div 
-            className="max-w-[90%]"
+            className="max-w-full md:max-w-[95%] lg:max-w-[90%]"
             variants={container}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
           >
-            <p className="text-5xl font-superior leading-[1.16] flex flex-wrap">
+            <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-superior leading-tight md:leading-[1.16] flex flex-wrap">
               {/* First part of text */}
               {text.split(" ").map((word, i) => (
                 <motion.span
@@ -123,28 +123,28 @@ const IntroSection = () => {
 
           {/* Partner Logos */}
           <div className="flex justify-center">
-            <div className="flex items-center">
+            <div className="flex flex-wrap justify-center gap-6 md:gap-0 md:flex-nowrap md:items-center">
               {partners.map((partner, index) => (
-                <div key={partner.name} className="flex items-center">
+                <div key={partner.name} className="flex items-center mb-4 md:mb-0">
                   <div className="flex flex-col items-center">
-                    <div className="h-10">
+                    <div className="h-16 sm:h-20 md:h-24">
                       <Image
                         src={partner.image}
                         alt={partner.name}
-                        width={125}
-                        height={40}
-                        className="object-contain opacity-70 hover:opacity-100 transition-opacity duration-300"
-                        style={{ maxHeight: '100%', width: '215.8px' }}
+                        width={280}
+                        height={80}
+                        className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                        style={{ maxHeight: '100%', width: 'auto', maxWidth: '280px', height: 'auto' }}
                       />
                     </div>
                     {partner.label && (
-                      <span className="text-[10px] text-white/60 mt-1 text-center whitespace-nowrap">
+                      <span className="text-[11px] sm:text-[12px] text-white/70 mt-2 text-center whitespace-nowrap">
                         {partner.label}
                       </span>
                     )}
                   </div>
                   {index < partners.length - 1 && (
-                    <div className="w-px h-12 bg-white/20 mx-8" />
+                    <div className="hidden md:block w-px h-20 bg-white/20 mx-5 lg:mx-10" />
                   )}
                 </div>
               ))}

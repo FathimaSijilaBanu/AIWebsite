@@ -26,19 +26,19 @@ const Contact = () => {
   };
 
   return (
-    <section className="relative w-full bg-[#1A1A1A] py-20 overflow-hidden">
+    <section className="relative w-full bg-[#1A1A1A] py-12 md:py-16 lg:py-20 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-t from-[rgba(116,0,0,0.15)] to-transparent" />
 
-      <div className="relative max-w-[1320px] mx-auto px-6 flex flex-col lg:flex-row justify-between">
+      <div className="relative max-w-[1320px] mx-auto px-4 sm:px-6 flex flex-col lg:flex-row justify-between gap-10 lg:gap-16">
         {/* Left Content */}
-        <div className="flex flex-col gap-20 max-w-[500px]">
+        <div className="flex flex-col gap-10 md:gap-16 lg:gap-20 w-full lg:max-w-[500px]">
           {/* Contact Info */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3 md:gap-4">
             <h3 className="font-superior text-sm font-normal tracking-[0.02em] uppercase text-white opacity-80">
               Contact Us
             </h3>
-            <h2 className="font-superior text-[56px] font-medium leading-[1.1] text-white">
+            <h2 className="font-superior text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-medium leading-[1.1] text-white">
               Let&apos;s do something amazing together
             </h2>
             <p className="font-superior text-base font-light text-white opacity-80">
@@ -51,7 +51,7 @@ const Contact = () => {
             <h3 className="font-superior text-sm font-normal tracking-[0.02em] uppercase text-white opacity-80">
               Regions
             </h3>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <span className="font-superior text-base font-light text-white opacity-80">UAE</span>
               <span className="text-white opacity-40">|</span>
               <span className="font-superior text-base font-light text-white opacity-80">Singapore</span>
@@ -64,12 +64,12 @@ const Contact = () => {
         </div>
 
         {/* Right Content - Form */}
-        <div className="flex-1 max-w-[500px]">
+        <div className="w-full lg:flex-1 lg:max-w-[500px] mt-8 lg:mt-0">
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <div className="flex flex-col gap-6">
               {/* First Row */}
-              <div className="flex gap-6">
-                <div className="flex-1">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <div className="w-full sm:flex-1">
                   <input
                     type="text"
                     name="name"
@@ -79,7 +79,7 @@ const Contact = () => {
                     className="w-full bg-[#1A1A1A] border border-white/20 rounded text-white font-superior text-base px-4 py-3 placeholder:text-white focus:outline-none focus:border-white/40"
                   />
                 </div>
-                <div className="flex-1">
+                <div className="w-full sm:flex-1">
                   <input
                     type="tel"
                     name="mobile"
@@ -92,8 +92,8 @@ const Contact = () => {
               </div>
 
               {/* Second Row */}
-              <div className="flex gap-6">
-                <div className="flex-1">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <div className="w-full sm:flex-1">
                   <input
                     type="email"
                     name="email"
@@ -103,7 +103,7 @@ const Contact = () => {
                     className="w-full bg-[#1A1A1A] border border-[#3A3A3A] rounded text-white/60 font-superior text-base px-4 py-3 placeholder:text-white/60 focus:outline-none focus:border-white/40"
                   />
                 </div>
-                <div className="flex-1 relative">
+                <div className="w-full sm:flex-1 relative">
                   <select
                     name="subject"
                     value={formData.subject}
@@ -139,7 +139,7 @@ const Contact = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-transparent border border-white/20 rounded-full py-4 px-6 flex items-center justify-center gap-1.5 text-white hover:bg-white hover:text-black transition-all group mt-4"
+              className="w-full bg-transparent border border-white/20 rounded-full py-3 sm:py-4 px-6 flex items-center justify-center gap-1.5 text-white hover:bg-white hover:text-black transition-all group mt-4"
             >
               <span className="font-superior text-base">Let&apos;s Connect</span>
               <svg

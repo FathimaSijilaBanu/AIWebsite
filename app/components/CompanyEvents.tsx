@@ -136,55 +136,55 @@ const Events = () => {
   const currentEvent = events[currentEventIndex];
 
   return (
-    <section className="relative bg-gradient-to-br from-pink-50 to-white overflow-hidden py-16">
+    <section className="relative bg-gradient-to-br from-pink-50 to-white overflow-hidden py-8 md:py-12 lg:py-16">
       <div className="container mx-auto px-4">
         {/* Top Navigation */}
-        <div className="flex items-center justify-between mb-10">
-          <h3 className="text-sm font-medium text-[#6B7280]">COMPANY EVENTS</h3>
+        <div className="flex items-center justify-between mb-6 md:mb-8 lg:mb-10">
+          <h3 className="text-xs sm:text-sm font-medium text-[#6B7280]">COMPANY EVENTS</h3>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button 
               onClick={handlePrevious}
-              className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center hover:border-black/30 transition-colors"
+              className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full border border-black/10 flex items-center justify-center hover:border-black/30 transition-colors"
               aria-label="Previous"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="sm:w-5 sm:h-5 lg:w-6 lg:h-6">
                 <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <span className="text-base">{currentEventIndex + 1} of {events.length}</span>
+            <span className="text-sm sm:text-base">{currentEventIndex + 1} of {events.length}</span>
             <button 
               onClick={handleNext}
-              className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center hover:border-black/30 transition-colors"
+              className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full border border-black/10 flex items-center justify-center hover:border-black/30 transition-colors"
               aria-label="Next"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="sm:w-5 sm:h-5 lg:w-6 lg:h-6">
                 <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
           </div>
         </div>
 
-        {/* Main Title */}
-        <div className="flex flex-col lg:flex-row gap-12">
-          <div className="lg:w-4/12">
-            <h2 className="text-[56px] font-medium leading-tight mb-8">
+        {/* Main Content */}
+        <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-12">
+          <div className="w-full lg:w-4/12">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-medium leading-tight mb-4 sm:mb-6 lg:mb-8">
               {currentEvent.title}
             </h2>
 
             {/* Explore Button */}
-            <button className="inline-flex items-center gap-2 px-6 py-3 border border-black/20 rounded-full hover:bg-black hover:text-white transition-colors mb-10">
+            <button className="inline-flex items-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-3 border border-black/20 rounded-full hover:bg-black hover:text-white transition-colors mb-6 lg:mb-10 text-sm sm:text-base">
               <span>Explore All Events</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="sm:w-5 sm:h-5">
                 <path d="M7 17L17 7M17 7H7M17 7V17" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
 
             {/* Upcoming Event Card */}
-            <div className="bg-[#FFF3F3] rounded-2xl p-6 mb-8">
-              <span className="text-[#335081] text-sm font-medium">Upcoming Event</span>
-              <h3 className="text-xl font-medium mt-2 mb-4">{upcomingEvent.title}</h3>
-              <div className="relative h-32 rounded-lg overflow-hidden">
+            <div className="bg-[#FFF3F3] rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 lg:mb-8">
+              <span className="text-[#335081] text-xs sm:text-sm font-medium">Upcoming Event</span>
+              <h3 className="text-lg sm:text-xl font-medium mt-2 mb-3 sm:mb-4">{upcomingEvent.title}</h3>
+              <div className="relative h-24 sm:h-28 md:h-32 rounded-lg overflow-hidden">
                 <Image
                   src={upcomingEvent.image}
                   alt={upcomingEvent.title}
@@ -194,16 +194,16 @@ const Events = () => {
               </div>
             </div>
 
-            <p className="text-base text-black/70">
+            <p className="text-sm sm:text-base text-black/70">
               {currentEvent.description}
             </p>
           </div>
           
           {/* Right Column - Image Slider */}
-          <div className="lg:w-8/12 relative">
+          <div className="w-full lg:w-8/12 relative mt-6 lg:mt-0">
             <div 
               ref={containerRef}
-              className="relative h-[600px] rounded-2xl overflow-hidden"
+              className="relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] rounded-xl sm:rounded-2xl overflow-hidden"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
             >
@@ -247,8 +247,8 @@ const Events = () => {
             </div>
 
             {/* Progress Bar and Controls */}
-            <div className="mt-6 flex items-center justify-between">
-              <div className="flex-grow h-1 bg-gray-200 rounded-full overflow-hidden mr-4">
+            <div className="mt-3 sm:mt-4 lg:mt-6 flex items-center justify-between">
+              <div className="flex-grow h-1 bg-gray-200 rounded-full overflow-hidden mr-3 sm:mr-4">
                 <div 
                   className="h-full bg-[#FF0000] transition-all duration-300"
                   style={{ width: `${calculateProgress()}%` }}
@@ -257,15 +257,15 @@ const Events = () => {
 
               <button
                 onClick={() => setIsPaused(!isPaused)}
-                className="w-12 h-12 rounded-full border border-black/20 flex items-center justify-center"
+                className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full border border-black/20 flex items-center justify-center"
                 aria-label={isPaused ? "Play" : "Pause"}
               >
                 {isPaused ? (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="sm:w-4 sm:h-4 lg:w-5 lg:h-5">
                     <path d="M5 4L19 12L5 20V4Z" fill="currentColor" />
                   </svg>
                 ) : (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="sm:w-4 sm:h-4 lg:w-5 lg:h-5">
                     <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" />
                     <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
                   </svg>

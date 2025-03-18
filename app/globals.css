@@ -32,6 +32,12 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+html, body {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -40,4 +46,12 @@ body {
     rgb(var(--background-end-rgb))
   );
   min-height: 100vh;
+}
+
+/* Responsive containers */
+@layer components {
+  .container {
+    @apply px-4 mx-auto;
+    max-width: 100%;
+  }
 } 

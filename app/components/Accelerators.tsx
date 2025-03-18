@@ -91,13 +91,13 @@ const AcceleratorCard = ({
   index
 }) => {
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-2xl p-8 overflow-visible group mt-10">
+    <div className="relative w-full h-full bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-2xl p-4 sm:p-6 md:p-8 overflow-visible group mt-6 sm:mt-10">
       {/* Background gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1a1a]/50 to-[#1a1a1a] z-0 rounded-2xl"></div>
 
       {/* Rocket Image */}
       {svgType === 'rocket' && (
-        <div className="absolute -top-[80px] -right-[15px] w-[300px] h-[300px] z-[999] rotate-[20deg] transition-transform duration-300 ease-out group-hover:scale-110">
+        <div className="absolute -top-[60px] sm:-top-[70px] md:-top-[80px] -right-[10px] sm:-right-[15px] w-[200px] sm:w-[250px] md:w-[300px] h-[200px] sm:h-[250px] md:h-[300px] z-[999] rotate-[20deg] transition-transform duration-300 ease-out group-hover:scale-110">
           <div className="relative w-full h-full">
             <Image
               src={rocketImage}
@@ -114,7 +114,7 @@ const AcceleratorCard = ({
 
       {/* Grid Image */}
       {svgType === 'grid' && (
-        <div className="absolute -top-[60px] right-[20px] w-[250px] h-[250px] z-[999] rotate-[20deg] transition-transform duration-300 ease-out group-hover:scale-110">
+        <div className="absolute -top-[40px] sm:-top-[50px] md:-top-[60px] right-[10px] sm:right-[15px] md:right-[20px] w-[180px] sm:w-[220px] md:w-[250px] h-[180px] sm:h-[220px] md:h-[250px] z-[999] rotate-[20deg] transition-transform duration-300 ease-out group-hover:scale-110">
           <div className="relative w-full h-full">
             <Image
               src={gridImage}
@@ -131,7 +131,7 @@ const AcceleratorCard = ({
 
       {/* Jewelry Image */}
       {svgType === 'jewelry' && (
-        <div className="absolute -top-[60px] right-[20px] w-[250px] h-[250px] z-[999] rotate-[20deg] transition-transform duration-300 ease-out group-hover:scale-110">
+        <div className="absolute -top-[40px] sm:-top-[50px] md:-top-[60px] right-[10px] sm:right-[15px] md:right-[20px] w-[180px] sm:w-[220px] md:w-[250px] h-[180px] sm:h-[220px] md:h-[250px] z-[999] rotate-[20deg] transition-transform duration-300 ease-out group-hover:scale-110">
           <div className="relative w-full h-full">
             <Image
               src={jewelImage}
@@ -148,7 +148,7 @@ const AcceleratorCard = ({
 
       {/* Pimcore Image */}
       {svgType === 'pimcore' && (
-        <div className="absolute -top-[60px] right-[20px] w-[250px] h-[250px] z-[999] rotate-[20deg] transition-transform duration-300 ease-out group-hover:scale-110">
+        <div className="absolute -top-[40px] sm:-top-[50px] md:-top-[60px] right-[10px] sm:right-[15px] md:right-[20px] w-[180px] sm:w-[220px] md:w-[250px] h-[180px] sm:h-[220px] md:h-[250px] z-[999] rotate-[20deg] transition-transform duration-300 ease-out group-hover:scale-110">
           <div className="relative w-full h-full">
             <Image
               src={pimcoreImage}
@@ -166,30 +166,30 @@ const AcceleratorCard = ({
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col">
         {/* Title with gradient border */}
-        <div className="flex justify-start mt-40">
+        <div className="flex justify-start mt-24 sm:mt-32 md:mt-40">
           <div className={`relative ${svgType === 'rocket' ? 'group-hover:scale-105 transition-transform duration-300' : ''}`}>
             <div className="absolute -inset-[1px] bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-[1px]"></div>
-            <h3 className="relative bg-[#1a1a1a] text-white px-6 py-2 rounded-full text-xl font-medium">
+            <h3 className="relative bg-[#1a1a1a] text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-lg sm:text-xl font-medium">
               {title}
             </h3>
           </div>
         </div>
 
         {/* Description */}
-        <p className={`text-gray-300 mt-6 text-base leading-relaxed max-w-[80%] ${svgType === 'rocket' ? 'group-hover:text-white transition-colors duration-300' : ''}`}>
+        <p className={`text-gray-300 mt-4 sm:mt-6 text-sm sm:text-base leading-relaxed max-w-[95%] sm:max-w-[90%] md:max-w-[80%] ${svgType === 'rocket' ? 'group-hover:text-white transition-colors duration-300' : ''}`}>
           {description}
         </p>
 
         {/* Features list */}
-        <div className="mt-10 space-y-4">
+        <div className="mt-6 sm:mt-8 md:mt-10 space-y-3 sm:space-y-4">
           {features.map((feature, idx) => (
             <div 
               key={idx}
-              className="flex items-center gap-3 text-sm text-gray-300"
+              className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300"
             >
-              <div className={`w-6 h-6 flex-shrink-0 ${svgType === 'rocket' ? 'transition-transform duration-300 group-hover:scale-110' : ''}`}>
+              <div className={`w-5 sm:w-6 h-5 sm:h-6 flex-shrink-0 ${svgType === 'rocket' ? 'transition-transform duration-300 group-hover:scale-110' : ''}`}>
                 {idx === 0 && (
-                  <div className="relative w-6 h-6">
+                  <div className="relative w-5 sm:w-6 h-5 sm:h-6">
                     <Image
                       src={icon1Image}
                       alt="Feature icon"
@@ -199,7 +199,7 @@ const AcceleratorCard = ({
                   </div>
                 )}
                 {idx === 1 && (
-                  <div className="relative w-6 h-6">
+                  <div className="relative w-5 sm:w-6 h-5 sm:h-6">
                     <Image
                       src={icon2Image}
                       alt="Feature icon"
@@ -209,7 +209,7 @@ const AcceleratorCard = ({
                   </div>
                 )}
                 {idx === 2 && (
-                  <div className="relative w-6 h-6">
+                  <div className="relative w-5 sm:w-6 h-5 sm:h-6">
                     <Image
                       src={icon3Image}
                       alt="Feature icon"
@@ -288,48 +288,48 @@ const Accelerators = () => {
   ];
 
   return (
-    <section className="relative bg-white py-20 overflow-visible">
+    <section className="relative bg-white py-10 md:py-20 overflow-visible">
       {/* Include animation styles */}
    
       
-      <div className="w-full relative ml-24 overflow-visible">
-        {/* Header */}
-        <div className="mb-8 px-6">
+      <div className="w-full relative px-4 md:px-8 lg:ml-24 overflow-visible">
+        {/* Header - Made responsive */}
+        <div className="mb-8 px-2 md:px-6">
           <span className="uppercase text-base font-normal text-black">ACCELERATORS</span>
-          <h2 className="text-5xl md:text-[56px] font-normal text-black leading-tight max-w-4xl mt-2">
-            Accelerating eCommerce <br />
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-normal text-black leading-tight max-w-4xl mt-2">
+            Accelerating eCommerce <br className="hidden md:block" />
             Innovation with Custom Solutions
           </h2>
-        </div>
-        
-        {/* Connect button (positioned absolute to match design) */}
-        <div className="absolute top-0 right-6 mr-32">
-          <Link href="#" className="inline-flex items-center gap-1.5 text-base font-normal border border-black rounded-full px-6 py-3 hover:bg-black hover:text-white transition-all duration-300">
-            Lets Connect <ArrowOutwardIcon />
-          </Link>
+          
+          {/* Connect button - Repositioned for mobile */}
+          <div className="mt-6 md:mt-0 md:absolute md:top-0 md:right-6 md:mr-8 lg:mr-32">
+            <Link href="#" className="inline-flex items-center gap-1.5 text-base font-normal border border-black rounded-full px-4 sm:px-6 py-2 sm:py-3 hover:bg-black hover:text-white transition-all duration-300">
+              Lets Connect <ArrowOutwardIcon />
+            </Link>
+          </div>
         </div>
 
-        {/* Accelerators Grid with horizontal scroll on all screen sizes */}
-        <div className="relative mt-12 overflow-visible">
+        {/* Accelerators Grid with horizontal scroll - Made responsive */}
+        <div className="relative mt-8 md:mt-12 overflow-visible">
           {/* Horizontal scrolling container */}
           <div 
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex overflow-x-auto gap-8 pb-8 pt-[180px] -mt-[180px] snap-x snap-mandatory scrollbar-hide relative overflow-visible"
+            className="flex overflow-x-auto gap-4 sm:gap-6 md:gap-8 pb-8 pt-[100px] sm:pt-[140px] md:pt-[180px] -mt-[100px] sm:-mt-[140px] md:-mt-[180px] snap-x snap-mandatory scrollbar-hide relative overflow-visible"
             style={{ 
               scrollbarWidth: 'none', 
               msOverflowStyle: 'none',
               paddingRight: '0',
-              width: 'calc(100vw - 6rem)'
+              width: 'calc(100% + 2rem)'
             }}
           >
             {accelerators.map((accelerator, index) => (
               <div 
                 key={accelerator.id} 
-                className="flex-shrink-0 snap-start h-[600px] relative overflow-visible"
+                className="flex-shrink-0 snap-start h-[500px] sm:h-[550px] md:h-[600px] relative overflow-visible"
                 style={{ 
-                  width: 'calc((100vw - 11rem) / 2)',
-                  minWidth: '300px',
+                  width: 'calc(90vw - 2rem)',
+                  minWidth: '280px',
                   maxWidth: '500px'
                 }}
               >

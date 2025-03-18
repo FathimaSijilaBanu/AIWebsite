@@ -41,14 +41,14 @@ const Partnerships = () => {
   ];
 
   return (
-    <section className="bg-black text-white py-20 overflow-hidden">
+    <section className="bg-black text-white py-10 md:py-16 lg:py-20 overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 md:mb-12 lg:mb-16">
           <motion.h3 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-sm uppercase tracking-wider mb-6"
+            className="text-xs md:text-sm uppercase tracking-wider mb-3 md:mb-6"
           >
             Our Partnerships
           </motion.h3>
@@ -56,37 +56,37 @@ const Partnerships = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-5xl font-light"
+            className="text-3xl md:text-4xl lg:text-5xl font-light"
           >
             Industry leading Partnerships
           </motion.h2>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {/* First Row - Right to Left */}
           <div className="relative">
             <motion.div 
-              animate={{ x: [0, -1400] }}
+              animate={{ x: [0, '-100%'] }}
               transition={{
                 x: {
                   repeat: Infinity,
                   repeatType: "loop",
-                  duration: 30,
+                  duration: 25,
                   ease: "linear",
                 },
               }}
-              className="flex gap-6"
+              className="flex gap-3 md:gap-4 lg:gap-6"
             >
               {firstRowPartners.map((partner) => (
                 <div 
                   key={partner.id}
-                  className="relative w-[200px] aspect-square flex-shrink-0 border border-white/10 rounded-lg overflow-hidden hover:border-white/30 transition-colors"
+                  className="relative w-[120px] sm:w-[150px] md:w-[180px] lg:w-[200px] aspect-square flex-shrink-0 border border-white/10 rounded-lg overflow-hidden hover:border-white/30 transition-colors"
                 >
                   <Image
                     src={partner.image}
                     alt={partner.alt}
                     fill
-                    className="object-contain p-6 filter grayscale hover:grayscale-0 transition-all"
+                    className="object-contain p-4 md:p-6 filter grayscale hover:grayscale-0 transition-all"
                   />
                 </div>
               ))}
@@ -96,27 +96,27 @@ const Partnerships = () => {
           {/* Second Row - Left to Right */}
           <div className="relative">
             <motion.div 
-              animate={{ x: [-1400, 0] }}
+              animate={{ x: ['-100%', 0] }}
               transition={{
                 x: {
                   repeat: Infinity,
                   repeatType: "loop",
-                  duration: 30,
+                  duration: 25,
                   ease: "linear",
                 },
               }}
-              className="flex gap-6"
+              className="flex gap-3 md:gap-4 lg:gap-6"
             >
               {secondRowPartners.map((partner) => (
                 <div 
                   key={`${partner.id}-second`}
-                  className="relative w-[200px] aspect-square flex-shrink-0 border border-white/10 rounded-lg overflow-hidden hover:border-white/30 transition-colors"
+                  className="relative w-[120px] sm:w-[150px] md:w-[180px] lg:w-[200px] aspect-square flex-shrink-0 border border-white/10 rounded-lg overflow-hidden hover:border-white/30 transition-colors"
                 >
                   <Image
                     src={partner.image}
                     alt={partner.alt}
                     fill
-                    className="object-contain p-6 filter grayscale hover:grayscale-0 transition-all"
+                    className="object-contain p-4 md:p-6 filter grayscale hover:grayscale-0 transition-all"
                   />
                 </div>
               ))}
@@ -128,11 +128,11 @@ const Partnerships = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="flex justify-center mt-12"
+          className="flex justify-center mt-8 md:mt-10 lg:mt-12"
         >
-          <button className="border border-white px-9 py-4 rounded-3xl flex items-center gap-2 hover:bg-white hover:text-black transition-colors">
+          <button className="border border-white px-6 py-3 md:px-9 md:py-4 rounded-3xl flex items-center gap-2 hover:bg-white hover:text-black transition-colors text-sm md:text-base">
             <span>View All</span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-6 md:h-6">
               <path d="M5 19V5H19V19H5Z" fill="none"/>
               <path d="M16 8.00023L18.0002 10.0002L16 12.0002" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M18 10.0002H10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>

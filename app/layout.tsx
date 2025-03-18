@@ -21,9 +21,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable}`}>
+      <body className={`${inter.variable} overflow-x-hidden max-w-full`}>
         <Header />
-        <main className="pt-28">
+        <main className="pt-0 w-full">
           {children}
         </main>
         <Footer/>

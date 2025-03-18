@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const awards = [
   {
@@ -66,14 +66,27 @@ const awards = [
 
 const Awards = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if we're on mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <section className="relative bg-black py-12 overflow-hidden">
       {/* Floating hover images container - show ONLY when first card is hovered */}
-      {hoveredCard === 0 && (
+      {hoveredCard === 0 && !isMobile && (
         <div className="absolute inset-0 pointer-events-none z-20 overflow-visible">
           <motion.div
-            className="absolute top-[100px] left-[240px] w-[230px] h-[190px] shadow-xl"
+            className="absolute top-[100px] left-[320px] w-[230px] h-[190px] shadow-xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
@@ -83,7 +96,7 @@ const Awards = () => {
               src={awards[0].hoverImages.image1}
               alt="Award image 1"
               fill
-              sizes="230px"
+              sizes="(max-width: 768px) 150px, 230px"
               className="object-cover rounded-lg"
               style={{ 
                 transform: 'rotate(-14deg)',
@@ -102,7 +115,7 @@ const Awards = () => {
               src={awards[0].hoverImages.image2}
               alt="Award image 2"
               fill
-              sizes="220px"
+              sizes="(max-width: 768px) 150px, 220px"
               className="object-cover rounded-lg"
               style={{ 
                 transform: 'rotate(20deg)',
@@ -132,7 +145,7 @@ const Awards = () => {
             viewport={{ once: true, amount: 0.1 }}
           >
             <div className="relative w-full">
-              <h2 className="font-superior font-medium text-[54px] leading-[1.1] text-white">
+              <h2 className="font-superior font-medium text-[32px] md:text-[54px] leading-[1.1] text-white">
                 <motion.div 
                   className="text-center mb-4"
                   initial={{ opacity: 0, x: -100 }}
@@ -143,7 +156,7 @@ const Awards = () => {
                   Step into our
                 </motion.div>
                 <motion.div 
-                  style={{marginLeft: '400px'}}
+                  className="md:ml-[400px]"
                   initial={{ opacity: 0, x: 100 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, amount: 0.1 }}
@@ -157,6 +170,7 @@ const Awards = () => {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, delay: 0.9 }}
+                className="hidden md:block"
               >
                 <Image
                   src="/images/awards/trophy.svg"
@@ -166,12 +180,26 @@ const Awards = () => {
                   className="absolute top-[-80%] right-[25%]"
                 />
               </motion.div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
+                className="md:hidden flex justify-center mt-4"
+              >
+                <Image
+                  src="/images/awards/trophy.svg"
+                  alt="Trophy"
+                  width={100}
+                  height={100}
+                />
+              </motion.div>
             </div>
           </motion.div>
         </div>
 
-        {/* Awards Grid with Animation */}
-        <div className="relative">
+        {/* Awards Grid with Animation - Desktop */}
+        <div className="relative hidden md:block">
           <motion.div 
             className="relative max-w-[1440px] mx-auto px-6 md:px-8 lg:px-12"
             initial="hidden"
@@ -242,8 +270,49 @@ const Awards = () => {
           </motion.div>
         </div>
 
+        {/* Awards Grid for Mobile */}
+        <div className="md:hidden">
+          <div className="grid gap-6">
+            {awards.map((award, index) => (
+              <motion.div
+                key={`mobile-${award.title}-${index}`}
+                className="rounded-[16px] overflow-hidden"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+              >
+                <div 
+                  className="p-6 flex flex-col"
+                  style={{
+                    background: `linear-gradient(135deg, ${award.gradient.from}, ${award.gradient.to})`,
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+                  }}
+                >
+                  <div className="bg-white w-12 h-12 rounded-xl flex items-center justify-center p-3 relative z-10">
+                    <Image
+                      src={award.icon}
+                      alt={award.title}
+                      width={30}
+                      height={30}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  
+                  <h3 className="font-superior font-medium text-xl text-white mt-6 relative z-10">
+                    {award.title}
+                  </h3>
+                  <p className="font-superior font-light text-base text-white/80 mt-4 relative z-10">
+                    {award.year}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
         {/* View All Button */}
-        <div className="flex justify-center mt-[500px] mb-12">
+        <div className="flex justify-center mt-[500px] md:mt-[500px] mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
